@@ -1,0 +1,170 @@
+{
+  "title": "gRPC Services Overview",
+  "uid": "grpc-overview",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "10s",
+  "time": { "from": "now-30m", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "gRPC Requests / sec",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum(rate(grpc_requests_total[1m])) by (service, method)",
+          "legendFormat": "{{service}} {{method}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "gRPC Request Duration (p99)",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(grpc_request_duration_seconds_bucket[1m])) by (le, service, method))",
+          "legendFormat": "{{service}} {{method}} p99"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Active gRPC Streams",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 8, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "sum(grpc_active_streams) by (service)",
+          "legendFormat": "{{service}}"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Metrics Received / sec",
+      "type": "stat",
+      "gridPos": { "x": 6, "y": 8, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "rate(metrics_received_total[1m])",
+          "legendFormat": "metrics/s"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Batches Processed / sec",
+      "type": "stat",
+      "gridPos": { "x": 12, "y": 8, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "rate(collector_batches_processed_total[1m])",
+          "legendFormat": "batches/s"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Aggregations Computed / sec",
+      "type": "stat",
+      "gridPos": { "x": 18, "y": 8, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "rate(aggregations_computed_total[1m])",
+          "legendFormat": "aggregations/s"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Active Watch Subscribers",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 12, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "aggregator_active_watchers",
+          "legendFormat": "watchers"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "gRPC Error Rate",
+      "type": "timeseries",
+      "gridPos": { "x": 6, "y": 12, "w": 18, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum(rate(grpc_requests_total{status!=\"OK\"}[1m])) by (service, method, status)",
+          "legendFormat": "{{service}} {{method}} {{status}}"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "gRPC Request Duration Heatmap (collector)",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 20, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(grpc_request_duration_seconds_bucket{service=\"collector\"}[1m])) by (le, method))",
+          "legendFormat": "p50 {{method}}"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(grpc_request_duration_seconds_bucket{service=\"collector\"}[1m])) by (le, method))",
+          "legendFormat": "p95 {{method}}"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(grpc_request_duration_seconds_bucket{service=\"collector\"}[1m])) by (le, method))",
+          "legendFormat": "p99 {{method}}"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "gRPC Request Duration Heatmap (aggregator)",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 20, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum(rate(grpc_request_duration_seconds_bucket{service=\"aggregator\"}[1m])) by (le, method))",
+          "legendFormat": "p50 {{method}}"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(grpc_request_duration_seconds_bucket{service=\"aggregator\"}[1m])) by (le, method))",
+          "legendFormat": "p95 {{method}}"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(grpc_request_duration_seconds_bucket{service=\"aggregator\"}[1m])) by (le, method))",
+          "legendFormat": "p99 {{method}}"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "Go Goroutines",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 28, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "go_goroutines",
+          "legendFormat": "{{job}}"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Go Memory (heap in use)",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 28, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "go_memstats_heap_inuse_bytes",
+          "legendFormat": "{{job}}"
+        }
+      ]
+    }
+  ]
+}
